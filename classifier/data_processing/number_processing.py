@@ -13,8 +13,18 @@ class NumberProcessing(object):
         pass
     
     @staticmethod
-    def create_dataloader(arr):
-        # arr.shape is (n,28,28,3)
-        train_data, test_data,train_loabels,test_labels = train_test_split()
-        
+    def create_dataloader(X ,y):
+        # arr.shape is (n,3,64,64)
+
+        X = torch.tensor(X).float()
+        y = torch.tensor(y).long()
+        train_data, test_data,train_labels,test_labels = train_test_split(X,y,test_size=.1,shuffle=True)
+        train_data = TensorDataset(train_data,train_labels)
+        test_data = TensorDataset(test_data,test_labels)
+
+        train_loader = DataLoader(train_data,batch_size=10,drop_last=True)
+        test_loader = DataLoader(test_data,batch_size=test_data.tensors[0].shape[0])
+
+        return train_loader, test_loader
+
 

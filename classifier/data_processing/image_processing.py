@@ -20,6 +20,8 @@ class ProcessImage(object):
             # skipping black and white images
             if len(img.shape)!=3:
                 continue
+
+            img = img.T
             image_list.append(img)
             i+=1
             if i%100 == 0:
@@ -108,7 +110,6 @@ class ProcessDataset(object):
 
                     if fullname.find("frieza")>=0:
                         self.labels.append(1)
-                        print(fullname)
 
                     elif fullname.find("gohan")>=0:
                         self.labels.append(2)
