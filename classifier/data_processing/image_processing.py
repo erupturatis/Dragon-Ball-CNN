@@ -23,7 +23,7 @@ class ProcessImage(object):
             image_list.append(img)
             i+=1
             if i%100 == 0:
-                print(i)
+                print(f"{i} images processed")
 
         image_list = np.stack(image_list)
         return image_list
@@ -58,6 +58,7 @@ class ProcessImage(object):
 class ProcessDataset(object):
 
     img_paths = list()
+    labels = list()
 
     def __init__(self) -> None:
         pass
@@ -90,23 +91,41 @@ class ProcessDataset(object):
             ProcessImage.reshape_image(image,x,y)
             i+=1
             if i%100 == 0:
-                print(i)
+                print(f"{i} images processed")
 
 
     def get_paths(self, name:str):
 
         print("start getting paths")
+        num_files = 0
         for path,dirs,files in os.walk(name):
+
             for filename in files:
+                num_files += 1
                 if filename.endswith(('.jpg', '.jpeg', '.png')):
                     fullname = os.path.abspath(os.path.join(path,filename))
                     self.img_paths.append(fullname)
 
-        print("finished getting paths")
+                    if fullname.find("frieza")>=0:
+                        self.labels.append(1)
+                        print(fullname)
 
-    def get_dataset_as_numpy(self, path:str):
-        self.get_paths(path)
-        return ProcessImage.image_to_numpy(self.img_paths)
+                    elif fullname.find("gohan")>=0:
+                        self.labels.append(2)
+
+                    elif fullname.find("goku")>=0:
+                        self.labels.append(3)
+
+                    elif fullname.find("vegeta")>=0:
+                        self.labels.append(4)
+                    
+
+        print(f"finished getting {num_files} paths")
+        print("---------------------------------------------- \n\n")
+
+    def get_dataset_as_numpy(self, name:str):
+        self.get_paths(name)
+        return ProcessImage.image_to_numpy(self.img_paths), self.labels
 
 
     @staticmethod
